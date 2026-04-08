@@ -1,0 +1,365 @@
+@import "tailwindcss";
+
+/*
+ * ============================================
+ * MARKET LAB — COLOR CONFIGURATION
+ * ============================================
+ *
+ * Color tokens are fixed to the default palette.
+ *
+ * ============================================
+ */
+
+@theme {
+  /* ---- Font Families ---- */
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* ---- Brand (Electric Violet) ---- */
+  --color-brand-50: #f5f2ff;
+  --color-brand-100: #ede5ff;
+  --color-brand-200: #ddd0ff;
+  --color-brand-300: #c4abff;
+  --color-brand-400: #a67dff;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+  --color-brand-950: #2e1065;
+
+  /* ---- Accent (Cyber Cyan) ---- */
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-200: #a5f3fc;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+  --color-accent-700: #0e7490;
+  --color-accent-800: #155e75;
+  --color-accent-900: #164e63;
+  --color-accent-950: #083344;
+
+  /* ---- Surface (Deep Space) ---- */
+  --color-surface-950: #06060e;
+  --color-surface-900: #0c0c1d;
+  --color-surface-800: #14142b;
+  --color-surface-700: #1e1e3a;
+  --color-surface-600: #2a2a4a;
+  --color-surface-500: #3b3b60;
+  --color-surface-400: #56567e;
+  --color-surface-300: #7c7ca0;
+  --color-surface-200: #a8a8c2;
+  --color-surface-100: #d1d1e0;
+  --color-surface-50: #ededf4;
+}
+
+/* ── Base Styles ────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  /* Offset for fixed ticker (32px) + navbar (~56px) */
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-surface-950);
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.5s ease;
+}
+
+body.custom-cursor-enabled,
+body.custom-cursor-enabled * {
+  cursor: none !important;
+}
+
+.custom-cursor-ring,
+.custom-cursor-dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.custom-cursor-ring {
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-accent-300) 55%, transparent);
+  background: transparent;
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: var(--color-accent-300);
+}
+
+/* ── Gradient Text ──────────────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-400),
+    var(--color-accent-400)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-reverse {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-400),
+    var(--color-brand-400)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow Effects (color-mix based) ─────────────────────────── */
+.glow-brand {
+  box-shadow:
+    0 0 50px color-mix(in srgb, var(--color-brand-500) 12%, transparent),
+    0 0 100px color-mix(in srgb, var(--color-brand-500) 6%, transparent);
+}
+
+.glow-accent {
+  box-shadow:
+    0 0 50px color-mix(in srgb, var(--color-accent-500) 12%, transparent),
+    0 0 100px color-mix(in srgb, var(--color-accent-500) 6%, transparent);
+}
+
+.glow-mixed {
+  box-shadow:
+    0 0 50px color-mix(in srgb, var(--color-brand-500) 10%, transparent),
+    0 0 50px color-mix(in srgb, var(--color-accent-500) 8%, transparent);
+}
+
+/* ── Glass Card ──────────────────────────────────────────────── */
+.glass {
+  background: color-mix(in srgb, var(--color-surface-800) 60%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Gradient Backgrounds ───────────────────────────────────── */
+.bg-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-600),
+    var(--color-brand-800)
+  );
+}
+
+.bg-gradient-mixed {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-600),
+    var(--color-accent-700)
+  );
+}
+
+/* ── Color transition (scoped — only bg/border/shadow) ───────── */
+.glass,
+section,
+footer,
+header,
+nav,
+[class*="bg-surface"],
+[class*="bg-brand"],
+[class*="bg-accent"],
+[class*="border-brand"],
+[class*="border-accent"],
+[class*="glow-"] {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* ── Hero floating orb breathing animation ──────────────────── */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(12px, -18px) scale(1.03);
+  }
+  66% {
+    transform: translate(-8px, 10px) scale(0.97);
+  }
+}
+
+@keyframes float-medium {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-15px, 12px) scale(1.04);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 14s ease-in-out infinite;
+}
+
+/* ── Shimmer gradient animation (for CTA border) ────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Ticker wall scroll animations ──────────────────────────── */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ── Cursor blink (for typewriter) ─────────────────────────── */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ── Pulse glow (for highlighted elements) ─────────────────── */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── Section Divider (gradient line between sections) ──────── */
+.section-divider {
+  height: 1px;
+  width: 100%;
+  margin-inline: auto;
+  background: linear-gradient(
+    90deg,
+    transparent 5%,
+    color-mix(in srgb, var(--color-brand-500) 24%, transparent) 30%,
+    color-mix(in srgb, var(--color-accent-500) 30%, transparent) 50%,
+    color-mix(in srgb, var(--color-brand-500) 24%, transparent) 70%,
+    transparent 95%
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.38;
+  box-shadow: 0 0 4px color-mix(in srgb, var(--color-brand-500) 8%, transparent);
+}
+
+@keyframes separator-shimmer {
+  0% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+@keyframes separator-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.separator-animated {
+  background-size: 200% 100%;
+}
+
+/* ── Selection color ───────────────────────────────────────── */
+::selection {
+  background: color-mix(in srgb, var(--color-brand-500) 30%, transparent);
+  color: white;
+}
+
+/* ── Focus-visible (accessibility) ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+/* ── Smooth page entrance ──────────────────────────────────── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-surface-600);
+}
