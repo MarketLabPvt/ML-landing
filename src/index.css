@@ -77,8 +77,16 @@ body.custom-cursor-enabled * {
   cursor: none !important;
 }
 
-.custom-cursor-ring,
-.custom-cursor-dot {
+body.custom-cursor-enabled {
+  --ncursor-a: #5de1ff;
+  --ncursor-b: #8f7bff;
+}
+
+/* ── Custom cursor: neon ring + comet trail ───────────────────── */
+.ncursor-ring,
+.ncursor-core,
+.ncursor-tail,
+.ncursor-pulse {
   position: fixed;
   left: 0;
   top: 0;
@@ -87,21 +95,89 @@ body.custom-cursor-enabled * {
   will-change: transform, opacity;
 }
 
-.custom-cursor-ring {
-  transform: translate(-50%, -50%);
-  width: 28px;
-  height: 28px;
+.ncursor-tail {
+  width: 46px;
+  height: 46px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-accent-300) 55%, transparent);
-  background: transparent;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--ncursor-b) 20%, transparent),
+    color-mix(in srgb, var(--ncursor-a) 10%, transparent) 58%,
+    transparent 75%
+  );
+  filter: blur(10px);
 }
 
-.custom-cursor-dot {
-  width: 6px;
-  height: 6px;
-  transform: translate(-50%, -50%);
+.ncursor-ring {
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
-  background: var(--color-accent-300);
+  border: 2px solid color-mix(in srgb, var(--ncursor-a) 78%, white);
+  background: color-mix(in srgb, var(--color-surface-950) 55%, transparent);
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--ncursor-a) 35%, transparent),
+    inset 0 0 10px color-mix(in srgb, var(--ncursor-b) 22%, transparent);
+}
+
+.ncursor-ring[data-interactive="true"] {
+  border-color: color-mix(in srgb, var(--ncursor-b) 74%, white);
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--ncursor-b) 45%, transparent),
+    0 0 34px color-mix(in srgb, var(--ncursor-a) 26%, transparent),
+    inset 0 0 12px color-mix(in srgb, var(--ncursor-a) 30%, transparent);
+}
+
+.ncursor-ring[data-pressed="true"] {
+  opacity: 0.9;
+}
+
+.ncursor-tail[data-interactive="true"] {
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--ncursor-b) 24%, transparent),
+    color-mix(in srgb, var(--ncursor-a) 16%, transparent) 58%,
+    transparent 75%
+  );
+}
+
+.ncursor-core {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ncursor-a) 70%, transparent),
+    0 0 20px color-mix(in srgb, var(--ncursor-a) 52%, transparent);
+}
+
+.ncursor-pulse {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ncursor-a) 70%, transparent);
+  opacity: 0;
+}
+
+.ncursor-pulse--play {
+  animation: ncursor-pulse 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes ncursor-pulse {
+  0% {
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+    opacity: 0.55;
+  }
+  100% {
+    width: 44px;
+    height: 44px;
+    margin-left: -22px;
+    margin-top: -22px;
+    opacity: 0;
+  }
 }
 
 /* ── Gradient Text ──────────────────────────────────────────── */

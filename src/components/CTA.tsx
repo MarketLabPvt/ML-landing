@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Zap, Send, CheckCircle, ChevronDown } from "lucide-react";
 
@@ -6,6 +6,18 @@ export default function CTA() {
   const [formOpen, setFormOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const handleOpenContactForm = () => {
+      setSubmitted(false);
+      setFormOpen(true);
+    };
+
+    window.addEventListener("open-contact-form", handleOpenContactForm);
+    return () => {
+      window.removeEventListener("open-contact-form", handleOpenContactForm);
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,8 +188,23 @@ export default function CTA() {
                               <input
                                 type="tel"
                                 required
-                                placeholder="+91 9876543210"
+                                placeholder="+91c9876543210"
                                 aria-label="Phone Number"
+                                inputMode="tel"
+                                pattern="^\+?\d+$"
+                                title="Use only numbers and an optional leading +"
+                                onInput={(e) => {
+                                  const input = e.currentTarget;
+                                  const hadLeadingPlus =
+                                    input.value.startsWith("+");
+                                  const digitsOnly = input.value.replace(
+                                    /\D/g,
+                                    "",
+                                  );
+                                  input.value = hadLeadingPlus
+                                    ? `+${digitsOnly}`
+                                    : digitsOnly;
+                                }}
                                 className="w-full bg-transparent text-base font-mono text-surface-100 placeholder:text-surface-400 outline-none caret-brand-300"
                               />
                             </div>

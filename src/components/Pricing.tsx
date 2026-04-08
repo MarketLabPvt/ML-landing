@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, Sparkles, Star } from "lucide-react";
+import { Check, MessageCircleQuestion, Sparkles, Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 const plans = [
@@ -102,6 +102,20 @@ export default function Pricing() {
       "25% bonus on first deposit within 30 days of course enrollment",
       "50% bonus on first deposit within 30 days of course enrollment",
     ].some((highlightText) => feature.includes(highlightText));
+
+  const handleHaveQuestionClick = () => {
+    const contactSection = document.getElementById("contact");
+    if (!contactSection) return;
+
+    contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event("open-contact-form"));
+      setTimeout(() => {
+        contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 180);
+    });
+  };
 
   return (
     <section id="pricing" className="relative py-16 sm:py-24 lg:py-32">
@@ -234,6 +248,7 @@ export default function Pricing() {
                 <a
                   href="https://market-lab-ofs8.onrender.com/signup"
                   target="_blank"
+                  rel="noreferrer"
                   className={`relative block text-center rounded-xl px-6 py-3.5 text-sm font-semibold transition-all ${
                     plan.highlighted
                       ? "bg-linear-to-r from-brand-600 to-accent-600 text-white shadow-lg shadow-brand-600/25 hover:from-brand-500 hover:to-accent-500"
@@ -246,6 +261,25 @@ export default function Pricing() {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="mt-9 flex justify-center">
+          <div className="group relative w-full max-w-xl rounded-xl border border-white/10 bg-linear-to-r from-white/5 via-white/3 to-white/5 p-1">
+            <div className="absolute inset-0 rounded-xl bg-[radial-gradient(60%_120%_at_50%_0%,rgba(59,130,246,0.15),transparent_65%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="relative flex flex-col items-center gap-3 rounded-[10px] bg-surface-900/80 px-4 py-3 sm:flex-row sm:justify-between">
+              <div className="flex items-center gap-2 text-surface-300">
+                <MessageCircleQuestion className="h-4 w-4 text-accent-300" />
+                <p className="text-sm">Need help choosing the right plan?</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleHaveQuestionClick}
+                className="rounded-md bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+              >
+                Talk to Us
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-surface-300">
