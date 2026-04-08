@@ -143,8 +143,8 @@ export default function CTA() {
                         </div>
 
                         <div className="p-5 sm:p-6 space-y-4">
-                          {/* Name + Email row */}
-                          <div className="grid sm:grid-cols-2 gap-4">
+                          {/* Name + Email + Phone row */}
+                          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div className="flex items-center gap-2">
                               <span className="text-brand-500 font-mono text-xs select-none shrink-0">
                                 →
@@ -167,6 +167,18 @@ export default function CTA() {
                                 placeholder="your@email.com"
                                 aria-label="Email"
                                 className="w-full bg-transparent text-base font-mono text-surface-100 placeholder:text-surface-400 outline-none caret-accent-300"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-brand-500 font-mono text-xs select-none shrink-0">
+                                →
+                              </span>
+                              <input
+                                type="tel"
+                                required
+                                placeholder="+91 9876543210"
+                                aria-label="Phone Number"
+                                className="w-full bg-transparent text-base font-mono text-surface-100 placeholder:text-surface-400 outline-none caret-brand-300"
                               />
                             </div>
                           </div>
