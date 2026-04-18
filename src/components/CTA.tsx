@@ -150,7 +150,7 @@ export default function CTA() {
                           <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]/60" />
                           <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/60" />
                           <span className="ml-3 text-xs font-mono text-surface-400">
-                            contact@market-lab.app
+                            hello@marketlabedu.com
                           </span>
                         </div>
 
