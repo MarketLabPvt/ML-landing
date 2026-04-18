@@ -246,7 +246,7 @@ export default function Pricing() {
                 </ul>
 
                 <a
-                  href="https://marketlabedu.com/signup"
+                  href="https://app.marketlabedu.com/signup"
                   target="_blank"
                   rel="noreferrer"
                   className={`relative block text-center rounded-xl px-6 py-3.5 text-sm font-semibold transition-all ${

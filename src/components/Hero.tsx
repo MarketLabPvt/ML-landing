@@ -254,7 +254,7 @@ export default function Hero() {
                 className="flex flex-col sm:flex-row items-center gap-3"
               >
                 <a
-                  href="https://marketlabedu.com/signup"
+                  href="https://app.marketlabedu.com/signup"
                   target="_blank"
                   className="group relative w-full sm:w-auto"
                 >

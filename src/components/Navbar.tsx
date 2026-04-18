@@ -95,14 +95,14 @@ export default function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-2 relative">
             <a
-              href="https://marketlabedu.com/login"
+              href="https://app.marketlabedu.com/login"
               target="_blank"
               className="px-3 py-1.5 text-[13px] font-medium text-surface-300 hover:text-white transition-colors"
             >
               Log In
             </a>
             <a
-              href="https://marketlabedu.com/signup"
+              href="https://app.marketlabedu.com/signup"
               target="_blank"
               className="group relative"
             >
@@ -150,7 +150,7 @@ export default function Navbar() {
                 ))}
                 <div className="mt-2 pt-2 border-t border-white/5 flex flex-col gap-2">
                   <a
-                    href="https://marketlabedu.com/login"
+                    href="https://app.marketlabedu.com/login"
                     target="_blank"
                     onClick={() => setMobileOpen(false)}
                     className="px-4 py-3 text-sm font-medium text-center text-surface-200 hover:text-white transition-colors rounded-xl"
@@ -158,7 +158,7 @@ export default function Navbar() {
                     Log In
                   </a>
                   <a
-                    href="https://marketlabedu.com/signup"
+                    href="https://app.marketlabedu.com/signup"
                     target="_blank"
                     onClick={() => setMobileOpen(false)}
                     className="px-5 py-3 text-sm font-semibold text-center rounded-xl bg-brand-600/90 text-white hover:bg-brand-500/90 transition-colors"
