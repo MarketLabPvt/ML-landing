@@ -10,7 +10,10 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { fetchPublicEvents, type PublicEvent } from "../services/events";
+import {
+  fetchPublicEvents,
+  type PublicEvent,
+} from "../services/events";
 
 type BannerStatus = "Live Now" | "Closing Soon" | "Upcoming";
 
@@ -121,20 +124,24 @@ export default function EventBannerPopup() {
   }, []);
 
   useEffect(() => {
-    if (!events.length) {
-      setActiveIndex(0);
-      return;
-    }
-    setActiveIndex((current) => current % events.length);
-  }, [events]);
-
-  useEffect(() => {
     if (!open || events.length <= 1) return;
     const interval = setInterval(() => {
       setActiveIndex((current) => (current + 1) % events.length);
     }, 4500);
     return () => clearInterval(interval);
   }, [open, events.length]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    const previousTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.touchAction = previousTouchAction;
+    };
+  }, [open]);
 
   const orderedEvents = useMemo(() => {
     if (!events.length) return null;
@@ -146,7 +153,8 @@ export default function EventBannerPopup() {
 
   const featuredEvent = useMemo(() => {
     if (!orderedEvents?.length) return null;
-    return orderedEvents[activeIndex % orderedEvents.length];
+    const safeIndex = ((activeIndex % orderedEvents.length) + orderedEvents.length) % orderedEvents.length;
+    return orderedEvents[safeIndex];
   }, [orderedEvents, activeIndex]);
 
   if (!featuredEvent) return null;
@@ -157,6 +165,9 @@ export default function EventBannerPopup() {
   const ctaHref = `https://app.marketlabedu.com/events/${featuredEvent.slug}`;
   const priceDisplay = formatEventPrice(featuredEvent);
   const totalEvents = orderedEvents?.length ?? 0;
+  const safeActiveIndex = totalEvents
+    ? ((activeIndex % totalEvents) + totalEvents) % totalEvents
+    : 0;
   const occupancyPct =
     featuredEvent.maxParticipants > 0
       ? Math.min(
@@ -186,7 +197,7 @@ export default function EventBannerPopup() {
         <button
           type="button"
           onClick={openPopup}
-          className="fixed bottom-4 right-4 z-[70] group w-[250px] rounded-2xl border border-white/15 bg-surface-900/90 p-3 text-left shadow-2xl shadow-black/45 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-accent-300/35"
+          className="fixed bottom-3 right-3 left-3 sm:bottom-4 sm:right-4 sm:left-auto z-70 group w-auto sm:w-[250px] rounded-2xl border border-white/15 bg-surface-900/90 p-3 text-left shadow-2xl shadow-black/45 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-accent-300/35"
         >
           <span className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-r from-brand-500/12 via-transparent to-accent-400/12 opacity-70" />
           <span className="relative flex items-center justify-between gap-3">
@@ -215,7 +226,7 @@ export default function EventBannerPopup() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-6"
+            className="fixed inset-0 z-80 flex items-end sm:items-center justify-center overflow-hidden p-0 sm:p-6"
             aria-modal="true"
             role="dialog"
             aria-label="Featured event popup"
@@ -231,7 +242,7 @@ export default function EventBannerPopup() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 18, scale: 0.97 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/12 bg-surface-900/90 shadow-2xl shadow-black/45 backdrop-blur-xl"
+              className="relative w-full sm:max-w-5xl overflow-hidden rounded-2xl sm:rounded-3xl border border-white/12 bg-surface-900/90 shadow-2xl shadow-black/45 backdrop-blur-xl"
             >
               <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-20 -left-20 h-56 w-56 rounded-full bg-brand-500/20 blur-3xl" />
@@ -241,37 +252,37 @@ export default function EventBannerPopup() {
               <button
                 type="button"
                 onClick={closePopup}
-                className="absolute right-3 top-3 z-20 rounded-full border border-white/15 bg-surface-900/80 p-2 text-surface-200 hover:text-white"
+                className="absolute right-2 top-2 sm:right-3 sm:top-3 z-20 rounded-full border border-white/15 bg-surface-900/80 p-2 text-surface-200 hover:text-white"
                 aria-label="Dismiss popup"
               >
                 <X className="h-4 w-4" />
               </button>
 
-              <div className="relative z-10 grid lg:grid-cols-[1.08fr_0.92fr]">
-                <div className="p-6 sm:p-8 lg:p-9">
-                  <div className="flex flex-wrap items-center gap-2.5">
+              <div className="relative z-10 grid min-w-0 lg:grid-cols-[1.08fr_0.92fr]">
+                <div className="min-w-0 p-3.5 pb-4 sm:p-8 lg:p-9">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${statusClassMap[status]}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClassMap[status]}`}
                     >
                       <Sparkles className="h-3.5 w-3.5 text-accent-300" />
                       {status}
                     </span>
-                    <span className="rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-surface-200 max-w-[320px] truncate">
+                    <span className="hidden sm:inline-flex rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-surface-200 max-w-full sm:max-w-[320px] truncate">
                       {featuredEvent.deliveryPlatform}
                     </span>
-                    <span className="rounded-full border border-brand-300/25 bg-brand-400/10 px-3 py-1.5 text-[11px] font-medium text-brand-100">
+                    <span className="rounded-full border border-brand-300/25 bg-brand-400/10 px-2.5 py-1 text-[10px] font-medium text-brand-100">
                       {startsInText}
                     </span>
                   </div>
 
-                  <h3 className="mt-4 font-heading text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
+                  <h3 className="mt-3 font-heading text-[clamp(1.15rem,5.8vw,1.6rem)] sm:text-4xl font-extrabold text-white leading-tight tracking-tight wrap-break-word line-clamp-2 sm:line-clamp-none">
                     {featuredEvent.title}
                   </h3>
-                  <p className="mt-3 max-w-2xl text-sm sm:text-[15px] text-surface-300 leading-relaxed line-clamp-3">
+                  <p className="mt-2 max-w-2xl text-xs sm:text-[15px] text-surface-300 leading-relaxed line-clamp-2 sm:line-clamp-3">
                     {featuredEvent.description}
                   </p>
 
-                  <div className="mt-6 grid sm:grid-cols-3 gap-2.5">
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
                     <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-sm">
                       <p className="flex items-center gap-2 text-xs text-surface-300">
                         <CalendarDays className="h-3.5 w-3.5 text-brand-300" />
@@ -284,9 +295,11 @@ export default function EventBannerPopup() {
                         <Clock3 className="h-3.5 w-3.5 text-accent-300" />
                         Time
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-white">{timePart}</p>
+                      <p className="mt-1 text-sm font-semibold text-white wrap-break-word">
+                        {timePart}
+                      </p>
                     </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-sm">
+                    <div className="col-span-2 sm:col-span-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-sm">
                       <p className="flex items-center gap-2 text-xs text-surface-300">
                         <Users className="h-3.5 w-3.5 text-surface-200" />
                         Seats left
@@ -297,7 +310,7 @@ export default function EventBannerPopup() {
                     </div>
                   </div>
 
-                  <div className="mt-5">
+                  <div className="mt-4 hidden sm:block">
                     <div className="mb-1.5 flex items-center justify-between text-[11px] text-surface-400">
                       <span>Seats filling fast</span>
                       <span>{occupancyPct}% filled</span>
@@ -310,30 +323,30 @@ export default function EventBannerPopup() {
                     </div>
                   </div>
 
-                  <div className="mt-6 rounded-2xl border border-white/14 bg-linear-to-r from-white/6 to-brand-500/8 p-3.5 sm:p-4">
-                    <div className="flex items-end justify-between gap-3">
+                  <div className="mt-4 rounded-2xl border border-white/14 bg-linear-to-r from-white/6 to-brand-500/8 p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                       <div>
                         <p className="text-[10px] uppercase tracking-[0.18em] text-surface-400">
                           Program Fee
                         </p>
-                        <p className="mt-1 font-heading text-3xl leading-none font-extrabold text-white">
+                        <p className="mt-1 font-heading text-xl sm:text-3xl leading-none font-extrabold text-white">
                           {priceDisplay.amountLabel}
                         </p>
-                        <p className="mt-1 text-xs text-surface-300">
+                        <p className="mt-1 text-xs text-surface-300 wrap-break-word">
                           {priceDisplay.currencyLabel}
                         </p>
                       </div>
-                      <span className="rounded-full border border-brand-300/35 bg-brand-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-brand-100">
+                      <span className="hidden sm:inline-flex self-start rounded-full border border-brand-300/35 bg-brand-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-brand-100">
                         Limited seats
                       </span>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                    <div className="mt-3 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2">
                       <a
                         href={ctaHref}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-brand-600 to-accent-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/35 transition-all hover:-translate-y-0.5 hover:brightness-110"
+                        className="inline-flex w-full sm:w-auto justify-center items-center gap-1.5 rounded-xl bg-linear-to-r from-brand-600 to-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/35 transition-all hover:-translate-y-0.5 hover:brightness-110"
                       >
                         Register Now
                         <ArrowUpRight className="h-4 w-4" />
@@ -341,7 +354,7 @@ export default function EventBannerPopup() {
                       <button
                         type="button"
                         onClick={closePopup}
-                        className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-surface-200 hover:text-white hover:bg-white/5 transition-colors"
+                        className="hidden sm:inline-flex w-full sm:w-auto rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-surface-200 hover:text-white hover:bg-white/5 transition-colors"
                       >
                         Maybe later
                       </button>
@@ -349,13 +362,56 @@ export default function EventBannerPopup() {
                   </div>
 
                   {totalEvents > 1 && (
-                    <div className="mt-6 rounded-2xl border border-white/10 bg-white/4 p-3">
+                    <div className="mt-3 sm:hidden rounded-xl border border-white/10 bg-white/4 px-2 py-1.5">
+                      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={prevEvent}
+                          className="grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/5 text-surface-100 hover:text-white hover:bg-white/10"
+                          aria-label="Previous event"
+                        >
+                          <ChevronLeft className="h-4.5 w-4.5" />
+                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="min-w-10 text-center text-xs font-semibold text-surface-200">
+                            {safeActiveIndex + 1} / {totalEvents}
+                          </span>
+                          <div className="flex items-center justify-center gap-1.5">
+                            {orderedEvents?.map((event, idx) => (
+                              <button
+                                key={event.id}
+                                type="button"
+                                onClick={() => setActiveIndex(idx)}
+                                className={`h-2 w-2 rounded-full transition-colors ${
+                                  idx === safeActiveIndex
+                                    ? "bg-accent-300"
+                                    : "bg-white/25 hover:bg-white/40"
+                                }`}
+                                aria-label={`Show event ${idx + 1}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={nextEvent}
+                          className="grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/5 text-surface-100 hover:text-white hover:bg-white/10"
+                          aria-label="Next event"
+                        >
+                          <ChevronRight className="h-4.5 w-4.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {totalEvents > 1 && (
+                    <div className="mt-4 hidden sm:block rounded-2xl border border-white/10 bg-white/4 p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <p className="text-xs font-semibold uppercase tracking-wide text-surface-300">
                           More events
                         </p>
                         <span className="text-xs text-surface-400">
-                          {activeIndex + 1}/{totalEvents}
+                          {safeActiveIndex + 1}/{totalEvents}
                         </span>
                       </div>
                       <div className="mb-2 flex items-center gap-2">
@@ -365,7 +421,7 @@ export default function EventBannerPopup() {
                             type="button"
                             onClick={() => setActiveIndex(idx)}
                             className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                              idx === activeIndex
+                              idx === safeActiveIndex
                                 ? "bg-accent-300"
                                 : "bg-white/20 hover:bg-white/35"
                             }`}
@@ -373,7 +429,7 @@ export default function EventBannerPopup() {
                           />
                         ))}
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button
                           type="button"
                           onClick={prevEvent}
@@ -390,7 +446,7 @@ export default function EventBannerPopup() {
                         >
                           <ChevronRight className="h-4 w-4" />
                         </button>
-                        <p className="truncate text-sm text-surface-300">
+                        <p className="w-full truncate text-xs sm:text-sm text-surface-300">
                           {featuredEvent.title}
                         </p>
                       </div>
@@ -398,7 +454,7 @@ export default function EventBannerPopup() {
                   )}
                 </div>
 
-                <div className="relative min-h-72 lg:min-h-full border-t lg:border-t-0 lg:border-l border-white/10">
+                <div className="hidden sm:block order-first lg:order-0 relative h-44 sm:h-64 lg:h-auto min-h-0 lg:min-h-full min-w-0 border-b lg:border-b-0 lg:border-t-0 lg:border-l border-white/10">
                   {featuredEvent.bannerUrl ? (
                     <img
                       src={featuredEvent.bannerUrl}
@@ -409,11 +465,11 @@ export default function EventBannerPopup() {
                     <div className="h-full w-full bg-linear-to-br from-brand-900/40 via-surface-900 to-accent-900/40" />
                   )}
                   <div className="absolute inset-0 bg-linear-to-t from-surface-950/78 via-surface-950/28 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/12 bg-surface-900/70 p-3 backdrop-blur-sm">
+                  <div className="absolute bottom-3 left-3 right-3 rounded-xl border border-white/12 bg-surface-900/70 p-2.5 sm:p-3 backdrop-blur-sm">
                     <p className="text-[11px] uppercase tracking-wide text-surface-400">
                       Featured session
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-white">
+                    <p className="mt-1 text-xs sm:text-sm font-semibold text-white truncate">
                       {featuredEvent.deliveryPlatform}
                     </p>
                     <p className="mt-1 text-xs text-surface-300">
